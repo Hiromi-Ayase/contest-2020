@@ -3,65 +3,83 @@ import java.util.Arrays;
 public class Main {
 
     private static void solve() {
-        int n = ni();
+        long l = nl();
+        long r = nl();
 
+        long x = f(r, r);
+        long y = f(l - 1, r);
+
+        int mod = (int) 1e9 + 7;
+        System.out.println((x - y + mod) % mod);
     }
 
-    private static long dfs(int i, boolean[] even, int ecnt, int[] a, int[] b) {
-        int n = even.length;
-        if (n == i) {
-            int[] arr = new int[n];
-            boolean[] used = new boolean[n];
-            for (int k = 0; k < n; k += 2) {
-                for (int j = 0; j < n; j++) {
-                    if (!used[j] && even[j] && k == 0 || arr[k - 2] >= a[j]) {
-                        arr[k] = a[j];
-                        used[j] = true;
-                        break;
-                    }
-                }
+    private static long f(long a, long b) {
+        int mod = (int) 1e9 + 7;
+        // dp[n桁目][started][xがa上限][yがb上限]
+        long[][][] dp = new long[65][2][2];
+
+        int as = 1;
+        int bs = 1;
+
+        for (int i = 63; i >= 0; i--) {
+            int abit = (int) ((a >> i) & 1);
+            int bbit = (int) ((b >> i) & 1);
+
+            if ((abit == 1 || as == 0) && (bbit == 1 || bs == 0)) {
+                dp[i][as][bs]++;
             }
 
-            for (int k = 0; k < n; k += 2) {
-                for (int j = 0; j < n; j++) {
-                    if (!used[j] && even[j] && k == 0 || arr[k - 2] >= a[j]) {
-                        arr[k] = a[j];
-                        used[j] = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        long ret = 0;
-        if (ecnt < (n + 1) / 2) {
-            even[i] = true;
-            ret += dfs(i + 1, even, ecnt + 1, a, b);
-        }
-
-        if (n - ecnt < n / 2) {
-            even[i] = false;
-            ret += dfs(i + 1, even, ecnt, a, b);
-        }
-        return ret;
-    }
-
-    public static long bubbleCount(int[] a, int l, int r) {
-        if (r - l <= 1)
-            return 0;
-        int m = (l + r) / 2;
-        long ret = bubbleCount(a, l, m) + bubbleCount(a, m, r);
-        int[] temp = Arrays.copyOfRange(a, l, r);
-        for (int p0 = 0, p1 = m - l, p = l; p < r;) {
-            if (p0 == m - l) {
-                a[p++] = temp[p1++];
-            } else if (p1 == r - l) {
-                a[p++] = temp[p0++];
-            } else if (temp[p0] <= temp[p1]) {
-                a[p++] = temp[p0++];
+            // a && b
+            if (abit == 1 && bbit == 1) {
+                dp[i][1][1] += dp[i + 1][1][1]; // (1, 1)
+                dp[i][0][0] += dp[i + 1][1][1]; // (0, 0)
+                dp[i][0][1] += dp[i + 1][1][1]; // (0, 1)
+            } else if (abit == 0 && bbit == 1) {
+                dp[i][1][1] += dp[i + 1][1][1]; // (0, 1)
+                dp[i][1][0] += dp[i + 1][1][1]; // (0, 0)
+            } else if (abit == 0 && bbit == 0) {
+                dp[i][1][1] += dp[i + 1][1][1]; // (0, 0)
             } else {
-                a[p++] = temp[p1++];
-                ret += m - l - p0;
+                // abit == 1 && bbit == 0
+                dp[i][0][1] += dp[i + 1][1][1]; // (0, 0)
+            }
+
+            // !a && !b
+            dp[i][0][0] += dp[i + 1][0][0] * 3; // (0, 0) (0, 1), (1, 1);
+
+            // b only
+            if (bbit == 1) {
+                dp[i][0][1] += dp[i + 1][0][1] * 2; // (1, 1), (0, 1)
+                dp[i][0][0] += dp[i + 1][0][1]; // (0, 0);
+            } else {
+                dp[i][0][1] += dp[i + 1][0][1]; // (0, 0)
+            }
+
+            // a only
+            if (abit == 1) {
+                dp[i][1][0] += dp[i + 1][1][0]; // (1, 1)
+                dp[i][0][0] += dp[i + 1][1][0] * 2; // (0, 1), (0, 0);
+            } else {
+                dp[i][1][0] += dp[i + 1][1][0] * 2; // (0, 0), (0, 1);
+            }
+
+            if (abit == 1) {
+                as = 0;
+            }
+            if (bbit == 1) {
+                bs = 0;
+            }
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 2; k++) {
+                    dp[i][j][k] %= mod;
+                }
+            }
+        }
+        long ret = 0;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                ret += dp[0][i][j];
+                ret %= mod;
             }
         }
         return ret;

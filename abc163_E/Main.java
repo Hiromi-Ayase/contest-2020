@@ -1,9 +1,37 @@
+import java.util.Arrays;
 
 public class Main {
 
     private static void solve() {
         int n = ni();
+        int[] a = na(n);
 
+        int[][] b = new int[n][2];
+        for (int i = 0; i < n; i++) {
+            b[i][0] = i;
+            b[i][1] = a[i];
+        }
+
+        Arrays.sort(b, (o1, o2) -> o2[1] - o1[1]);
+
+        long[][] dp = new long[n + 1][n + 1];
+        for (int i = 0; i < n; i++) {
+            for (int l = 0; l <= i; l++) {
+                int r = n - (i - l) - 1;
+                // left:j個 right:i-j個
+
+                long lp = (long) b[i][1] * Math.abs(b[i][0] - l);
+                dp[i + 1][l + 1] = Math.max(dp[i + 1][l + 1], dp[i][l] + lp);
+                long rp = (long) b[i][1] * Math.abs(b[i][0] - r);
+                dp[i + 1][l] = Math.max(dp[i + 1][l], dp[i][l] + rp);
+            }
+        }
+
+        long ret = 0;
+        for (int i = 0; i <= n; i++) {
+            ret = Math.max(ret, dp[n][i]);
+        }
+        System.out.println(ret);
     }
 
     public static void main(String[] args) {
