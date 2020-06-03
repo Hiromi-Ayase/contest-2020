@@ -9,7 +9,7 @@ public class Main {
     int mod = 998244353;
 
     Arrays.sort(a);
-    for (int i = 0, j = n - 1; i < j; i ++ , j --) {
+    for (int i = 0, j = n - 1; i < j; i++, j--) {
       int tmp = a[i];
       a[i] = a[j];
       a[j] = tmp;
@@ -18,9 +18,9 @@ public class Main {
     long[][] dp = new long[n + 1][n + 2];
     dp[0][0] = 1;
 
-    for (int i = 0; i < n; i ++) {
-      for (int j = 0; j <= n; j ++) {
-        dp[i + 1][j] = dp[i][j] * (a[i]-1) % mod;
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j <= n; j++) {
+        dp[i + 1][j] = dp[i][j] * (a[i] - 1) % mod;
         if (j > 0)
           dp[i + 1][j] += dp[i][j - 1];
 
@@ -30,17 +30,17 @@ public class Main {
 
     long[] sum = new long[n + 1];
     sum[n] = 1;
-    for (int i = n; i > 0; i --) {
-      sum[i-1] = sum[i] * a[i-1] % mod;
+    for (int i = n; i > 0; i--) {
+      sum[i - 1] = sum[i] * a[i - 1] % mod;
     }
 
-    for (int i = 0; i < q; i ++){ 
+    for (int i = 0; i < q; i++) {
       int l = ni();
       int r = ni();
       int p = ni();
 
       long ret = 0;
-      for (int k = l; k <= r; k ++) {
+      for (int k = l; k <= r; k++) {
         int idx = bisect(k, a);
 
         long now = dp[idx + 1][p] * sum[idx + 1] % mod;
@@ -158,4 +158,3 @@ public class Main {
       System.out.println(java.util.Arrays.deepToString(o));
   }
 }
-
