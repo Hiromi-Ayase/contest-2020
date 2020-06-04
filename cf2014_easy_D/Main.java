@@ -1,9 +1,34 @@
+import java.util.Arrays;
+import java.util.PriorityQueue;
 
 public class Main {
 
   private static void solve() {
     int n = ni();
+    int m = ni();
+    int[][] p = ntable(n, 2);
+    int[] a = na(m);
+    PriorityQueue<Integer> q = new PriorityQueue<>();
 
+    Arrays.sort(a);
+    Arrays.sort(p, (o1, o2) -> o1[0] - o2[0]);
+    int ptr = 0;
+    int ret = 0;
+    for (int v : a) {
+      while (ptr < n && p[ptr][0] <= v) {
+        q.add(p[ptr][1]);
+        ptr++;
+      }
+      while (q.size() > 0 && q.peek() < v) {
+        q.poll();
+      }
+
+      if (q.size() > 0) {
+        ret++;
+        q.poll();
+      }
+    }
+    System.out.println(ret);
   }
 
   public static void main(String[] args) {

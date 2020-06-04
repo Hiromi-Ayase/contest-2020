@@ -6,8 +6,68 @@ public class Main {
         int w = ni();
         int mod = (int) 1e9 + 7;
 
-        long[][] dp = new long[b + 1][w + 1];
+        int[][] fif = enumFIF(b + w, mod);
 
+        long s = 1;
+        long two = invl(2, mod);
+        long[] pb = new long[b + w + 1];
+        long[] pw = new long[b + w + 1];
+        for (int i = 0; i < b + w; i++) {
+
+            if (i >= b) {
+                pb[i] = (CX(i - 1, b - 1, mod, fif) * s % mod + pb[i - 1]) % mod;
+            }
+            if (i >= w) {
+                pw[i] = (CX(i - 1, w - 1, mod, fif) * s % mod + pw[i - 1]) % mod;
+            }
+
+            long ret = (mod + 1 - pb[i] + pw[i]) % mod * two % mod;
+            out.println(ret);
+
+            s = s * two % mod;
+        }
+
+    }
+
+    public static long CX(long n, long r, int p, int[][] fif) {
+        if (n < 0 || r < 0 || r > n)
+            return 0;
+        int np = (int) (n % p), rp = (int) (r % p);
+        if (np < rp)
+            return 0;
+        if (n == 0 && r == 0)
+            return 1;
+        int nrp = np - rp;
+        if (nrp < 0)
+            nrp += p;
+        return (long) fif[0][np] * fif[1][rp] % p * fif[1][nrp] % p * CX(n / p, r / p, p, fif) % p;
+    }
+
+    public static int[][] enumFIF(int n, int mod) {
+        int[] f = new int[n + 1];
+        int[] invf = new int[n + 1];
+        f[0] = 1;
+        for (int i = 1; i <= n; i++) {
+            f[i] = (int) ((long) f[i - 1] * i % mod);
+        }
+        long a = f[n];
+        long b = mod;
+        long p = 1, q = 0;
+        while (b > 0) {
+            long c = a / b;
+            long d;
+            d = a;
+            a = b;
+            b = d % b;
+            d = p;
+            p = q;
+            q = d - c * q;
+        }
+        invf[n] = (int) (p < 0 ? p + mod : p);
+        for (int i = n - 1; i >= 0; i--) {
+            invf[i] = (int) ((long) invf[i + 1] * (i + 1) % mod);
+        }
+        return new int[][] {f, invf};
     }
 
     public static long invl(long a, long mod) {

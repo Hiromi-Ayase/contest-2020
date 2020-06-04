@@ -3,9 +3,10 @@
 		{
 			"name": "work",
 			"path": "work"
-		},
-		{
-			"path": "exa2019_E"
 		}
-	]
+	],
+	"settings": {
+		"editor.tabSize": 2,
+		"editor.tabCompletion": "on"
+	}
 }
