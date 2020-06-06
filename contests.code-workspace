@@ -3,6 +3,18 @@
 		{
 			"name": "work",
 			"path": "work"
+		},
+		{
+			"path": "yukicoder1071"
+		},
+		{
+			"path": "yukicoder1072"
+		},
+		{
+			"path": "yukicoder1073"
+		},
+		{
+			"path": "yukicoder1074"
 		}
 	],
 	"settings": {
