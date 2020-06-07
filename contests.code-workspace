@@ -9,6 +9,9 @@
 		},
 		{
 			"path": "past_N"
+		},
+		{
+			"path": "past_N_rust"
 		}
 	],
 	"settings": {

@@ -30,6 +30,7 @@ public class Main {
           }
         }
       }
+      System.out.println(Arrays.toString(a) + " " + set);
     }
     for (int i = 0; i < n; i++) {
       out.print(a[i] + 1 + " ");
