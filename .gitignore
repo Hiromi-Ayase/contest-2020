@@ -2,5 +2,6 @@
 *.log
 *.out
 *.lock
+.vscode
 test/
 target/

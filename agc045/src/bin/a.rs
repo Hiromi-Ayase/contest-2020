@@ -1,0 +1,3 @@
+import proconio;
+
+fn main() {}
