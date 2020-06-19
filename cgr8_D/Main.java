@@ -1,8 +1,61 @@
+import java.util.Arrays;
 
 public class Main {
 
   private static void solve() {
     int n = ni();
+    int[] a = na(n);
+
+    int[] b = new int[n];
+
+    for (int k = 21; k >= 0; k--) {
+      int ptr = 0;
+      for (int i = 0; i < n; i++) {
+        if (((a[i] >> k) & 1) == 1) {
+          b[ptr++] |= 1 << k;
+        }
+      }
+    }
+
+    long ans = 0;
+    for (int v : b) {
+      ans += (long) v * v;
+    }
+
+    System.out.println(ans);
+  }
+
+  public static int[] radixSort(int[] f) {
+    return radixSort(f, f.length);
+  }
+
+  public static int[] radixSort(int[] f, int n) {
+    int[] to = new int[n];
+    {
+      int[] b = new int[65537];
+      for (int i = 0; i < n; i++)
+        b[1 + (f[i] & 0xffff)]++;
+      for (int i = 1; i <= 65536; i++)
+        b[i] += b[i - 1];
+      for (int i = 0; i < n; i++)
+        to[b[f[i] & 0xffff]++] = f[i];
+      int[] d = f;
+      f = to;
+      to = d;
+    }
+    {
+      int[] b = new int[65537];
+      for (int i = 0; i < n; i++)
+        b[1 + (f[i] >>> 16)]++;
+      for (int i = 1; i <= 65536; i++)
+        b[i] += b[i - 1];
+      for (int i = 0; i < n; i++)
+        to[b[f[i] >>> 16]++] = f[i];
+      int[] d = f;
+      f = to;
+      to = d;
+    }
+    return f;
   }
 
   public static void main(String[] args) {

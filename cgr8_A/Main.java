@@ -1,8 +1,31 @@
+import java.util.Arrays;
 
 public class Main {
 
   private static void solve() {
-    int n = ni();
+    int t = ni();
+
+    for (int i = 0; i < t; i++) {
+      long a = nl();
+      long b = nl();
+
+      long n = nl();
+
+      if (a > b) {
+        long tmp = a;
+        a = b;
+        b = tmp;
+      }
+      int ret = 0;
+      while (b <= n) {
+        ret++;
+        a += b;
+        long tmp = b;
+        b = a;
+        a = tmp;
+      }
+      out.println(ret);
+    }
   }
 
   public static void main(String[] args) {

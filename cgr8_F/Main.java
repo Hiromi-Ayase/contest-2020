@@ -3,6 +3,32 @@ public class Main {
 
   private static void solve() {
     int n = ni();
+    if (n <= 3) {
+      System.out.println(0);
+      return;
+    }
+    int[] l = new int[n];
+
+    int k = 0;
+    for (int i = 0; i < (n / 4); i++) {
+      l[k++] = i;
+      l[k++] = i + (n / 2);
+    }
+    ask(k, l);
+    System.out.println(0);
+
+  }
+
+  private static int ask(int k, int[] l) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(k);
+    for (int i = 0; i < k; i++) {
+      sb.append(" " + (1 + l[i]));
+    }
+    System.out.println(sb);
+    System.out.flush();
+
+    return ni();
   }
 
   public static void main(String[] args) {

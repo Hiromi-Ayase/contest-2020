@@ -1,8 +1,44 @@
+import java.util.Arrays;
 
 public class Main {
 
   private static void solve() {
-    int n = ni();
+    StringBuffer sb = new StringBuffer();
+    char[] s = "codeforces".toCharArray();
+    long k = nl();
+    if (k == 1) {
+      System.out.println(s);
+      return;
+    }
+
+    long x = 0;
+    long xp = 0;
+    for (int i = 1; i <= 55; i++) {
+      long v = 1;
+      for (int j = 0; j < 10; j++) {
+        v *= i;
+      }
+      if (v >= k) {
+        x = i;
+        xp = v;
+        break;
+      }
+    }
+
+    for (int i = 0; i < 10; i++) {
+      xp /= x;
+      xp *= x - 1;
+
+      if (xp < k) {
+        for (int j = 0; j < 10; j++) {
+          for (int t = 0; t < (j < i ? x - 1 : x); t++) {
+            sb.append(s[j]);
+          }
+        }
+        break;
+      }
+    }
+    System.out.println(sb);
   }
 
   public static void main(String[] args) {
