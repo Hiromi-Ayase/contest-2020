@@ -1,29 +1,19 @@
-import java.util.Arrays;
 
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    int m = 62;
+    int n = ni();
+    long d = ni();
 
-    int mod = (int) 1e9 + 7;
-
-    long[][] dp = new long[m + 1][3];
-    dp[m][0] = 1;
-    for (int i = m - 1; i >= 0; i--) {
-      int d = (int) ((n >> i) & 1);
-
-      for (int j = 0; j <= 2; j++) {
-        for (int k = 0; k <= 2; k++) {
-          int ns = Math.min(2, j * 2 + d - k);
-          if (ns < 0)
-            continue;
-          dp[i][ns] += dp[i + 1][j];
-          dp[i][ns] %= mod;
-        }
+    int ret = 0;
+    for (int i = 0; i < n; i++) {
+      long x = nl();
+      long y = nl();
+      if (x * x + y * y <= d * d) {
+        ret++;
       }
     }
-    System.out.println(Arrays.stream(dp[0]).sum() % mod);
+    System.out.println(ret);
   }
 
   public static void main(String[] args) {

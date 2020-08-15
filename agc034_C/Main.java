@@ -3,27 +3,60 @@ import java.util.Arrays;
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    int m = 62;
+    int n = ni();
+    int x = ni();
+    int[][] p = ntable(n, 3);
 
-    int mod = (int) 1e9 + 7;
+    Arrays.sort(p, (o1, o2) -> {
+      long y = (long) (x - o1[0]) * o1[2] - (long) (x - o2[0]) * o2[2];
+      return Long.signum(-y);
+    });
 
-    long[][] dp = new long[m + 1][3];
-    dp[m][0] = 1;
-    for (int i = m - 1; i >= 0; i--) {
-      int d = (int) ((n >> i) & 1);
+    long[] sumL = new long[n + 1];
+    long[] sumU = new long[n + 1];
+    for (int i = 0; i < n; i++) {
+      sumL[i + 1] = sumL[i] + (long) p[i][1] * p[i][0];
+      sumU[i + 1] = sumU[i] + (long) p[i][2] * p[i][0];
+    }
 
-      for (int j = 0; j <= 2; j++) {
-        for (int k = 0; k <= 2; k++) {
-          int ns = Math.min(2, j * 2 + d - k);
-          if (ns < 0)
-            continue;
-          dp[i][ns] += dp[i + 1][j];
-          dp[i][ns] %= mod;
+    long asum = 0;
+    long ret = 0;
+
+    for (int i = 1; i <= n; i++) {
+      long bsum = sumU[i] + (sumL[n] - sumL[i]);
+
+      asum += (long) p[i - 1][2] * x;
+      ret += x;
+
+      if (bsum < asum) {
+        asum -= (long) p[i - 1][2] * x;
+        ret -= x;
+        bsum = sumU[i - 1] + (sumL[n] - sumL[i - 1]);
+
+        int[][] q = new int[n][2];
+        for (int j = 0; j < i - 1; j++) {
+          p[j][0] = p[j][2];
+          p[j][1] = x;
+        }
+
+        Arrays.sort(q, (o1, o2) -> o1[2] - o2[2]);
+
+        int ptr = 0;
+        while (ptr < i && bsum < asum) {
+          long z = (asum - bsum) / p[ptr][2];
+          long y = Math.min(z, x);
+
+          asum -= p[ptr][2] * y;
+          ret -= y;
+
+          ptr++;
+
+          break;
         }
       }
     }
-    System.out.println(Arrays.stream(dp[0]).sum() % mod);
+    System.out.println(ret);
+
   }
 
   public static void main(String[] args) {

@@ -1,29 +1,28 @@
-import java.util.Arrays;
 
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    int m = 62;
+    int n = ni();
+    int k = ni();
+    int[] a = na(n);
+    long left = 0;
+    long right = (long) 1e10;
 
-    int mod = (int) 1e9 + 7;
+    while (right - left > 1) {
+      long x = (left + right) / 2;
 
-    long[][] dp = new long[m + 1][3];
-    dp[m][0] = 1;
-    for (int i = m - 1; i >= 0; i--) {
-      int d = (int) ((n >> i) & 1);
+      long now = 0;
+      for (int v : a) {
+        now += (v + x - 1) / x - 1;
+      }
 
-      for (int j = 0; j <= 2; j++) {
-        for (int k = 0; k <= 2; k++) {
-          int ns = Math.min(2, j * 2 + d - k);
-          if (ns < 0)
-            continue;
-          dp[i][ns] += dp[i + 1][j];
-          dp[i][ns] %= mod;
-        }
+      if (now <= k) {
+        right = x;
+      } else {
+        left = x;
       }
     }
-    System.out.println(Arrays.stream(dp[0]).sum() % mod);
+    System.out.println(right);
   }
 
   public static void main(String[] args) {

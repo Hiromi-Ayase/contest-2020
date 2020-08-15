@@ -2,28 +2,95 @@ import java.util.Arrays;
 
 public class Main {
 
-  private static void solve() {
-    long n = nl();
-    int m = 62;
+  static class DisjointSet {
+    public int[] upper; // minus:num_element(root) plus:root(normal)
+    // public int[] w;
 
-    int mod = (int) 1e9 + 7;
-
-    long[][] dp = new long[m + 1][3];
-    dp[m][0] = 1;
-    for (int i = m - 1; i >= 0; i--) {
-      int d = (int) ((n >> i) & 1);
-
-      for (int j = 0; j <= 2; j++) {
-        for (int k = 0; k <= 2; k++) {
-          int ns = Math.min(2, j * 2 + d - k);
-          if (ns < 0)
-            continue;
-          dp[i][ns] += dp[i + 1][j];
-          dp[i][ns] %= mod;
-        }
-      }
+    public DisjointSet(int n) {
+      upper = new int[n];
+      Arrays.fill(upper, -1);
+      // w = new int[n];
     }
-    System.out.println(Arrays.stream(dp[0]).sum() % mod);
+
+    public DisjointSet(DisjointSet ds) {
+      this.upper = Arrays.copyOf(ds.upper, ds.upper.length);
+    }
+
+    public int root(int x) {
+      return upper[x] < 0 ? x : (upper[x] = root(upper[x]));
+    }
+
+    public boolean equiv(int x, int y) {
+      return root(x) == root(y);
+    }
+
+    public boolean union(int x, int y) {
+      x = root(x);
+      y = root(y);
+      if (x != y) {
+        if (upper[y] < upper[x]) {
+          int d = x;
+          x = y;
+          y = d;
+        }
+        // w[x] += w[y];
+        upper[x] += upper[y];
+        upper[y] = x;
+      }
+      return x == y;
+    }
+
+    public int count() {
+      int ct = 0;
+      for (int u : upper) {
+        if (u < 0)
+          ct++;
+      }
+      return ct;
+    }
+
+    public int[][] toBucket() {
+      int n = upper.length;
+      int[][] ret = new int[n][];
+      int[] rp = new int[n];
+      for (int i = 0; i < n; i++) {
+        if (upper[i] < 0)
+          ret[i] = new int[-upper[i]];
+      }
+      for (int i = 0; i < n; i++) {
+        int r = root(i);
+        ret[r][rp[r]++] = i;
+      }
+      return ret;
+    }
+  }
+
+  private static void solve() {
+    int n = ni();
+    int a = ni();
+    int b = ni();
+    int[] x = na(n);
+
+    int l = 0;
+    int r = 0;
+    DisjointSet ds = new DisjointSet(n);
+    for (int i = 0; i < n; i++) {
+      while (l < n && x[i] + a > x[l]) {
+        l++;
+      }
+      while (r < n && x[i] + b >= x[r]) {
+        r++;
+      }
+
+      for (int j = l; j < r; j++) {
+        ds.union(i, j);
+      }
+      l = Math.max(l, r - 1);
+    }
+
+    for (int i = 0; i < n; i++) {
+      out.println(-ds.upper[ds.root(i)]);
+    }
   }
 
   public static void main(String[] args) {

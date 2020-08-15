@@ -3,27 +3,60 @@ import java.util.Arrays;
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    int m = 62;
-
-    int mod = (int) 1e9 + 7;
-
-    long[][] dp = new long[m + 1][3];
-    dp[m][0] = 1;
-    for (int i = m - 1; i >= 0; i--) {
-      int d = (int) ((n >> i) & 1);
-
-      for (int j = 0; j <= 2; j++) {
-        for (int k = 0; k <= 2; k++) {
-          int ns = Math.min(2, j * 2 + d - k);
-          if (ns < 0)
-            continue;
-          dp[i][ns] += dp[i + 1][j];
-          dp[i][ns] %= mod;
-        }
-      }
+    int n = ni();
+    int q = ni();
+    int[] a = na(n);
+    int[][] qs = new int[q][3];
+    for (int i = 0; i < q; i++) {
+      qs[i][0] = i;
+      qs[i][1] = ni() - 1;
+      qs[i][2] = ni() - 1;
     }
-    System.out.println(Arrays.stream(dp[0]).sum() % mod);
+    for (int i = 0; i < n; i++) {
+      a[i]--;
+    }
+
+    Arrays.sort(qs, (o1, o2) -> o1[2] - o2[2]);
+    int[] last = new int[n];
+    Arrays.fill(last, -1);
+
+    int[] ft = new int[n + 1];
+    int[] ret = new int[q];
+
+    int rp = 0;
+    for (int i = 0; i < q; i++) {
+      int l = qs[i][1];
+      int r = qs[i][2];
+
+      while (rp <= r) {
+        if (last[a[rp]] >= 0) {
+          addFenwick(ft, last[a[rp]], -1);
+        }
+        last[a[rp]] = rp;
+        addFenwick(ft, last[a[rp]], 1);
+        rp++;
+      }
+      ret[qs[i][0]] = sumFenwick(ft, r) - sumFenwick(ft, l - 1);
+    }
+
+    for (int v : ret) {
+      out.println(v);
+    }
+  }
+
+  public static int sumFenwick(int[] ft, int i) {
+    int sum = 0;
+    for (i++; i > 0; i -= i & -i)
+      sum += ft[i];
+    return sum;
+  }
+
+  public static void addFenwick(int[] ft, int i, int v) {
+    if (v == 0 || i < 0)
+      return;
+    int n = ft.length;
+    for (i++; i < n; i += i & -i)
+      ft[i] += v;
   }
 
   public static void main(String[] args) {

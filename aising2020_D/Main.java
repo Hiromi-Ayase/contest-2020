@@ -1,29 +1,70 @@
-import java.util.Arrays;
 
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    int m = 62;
+    int n = ni();
+    char[] s = ns();
 
-    int mod = (int) 1e9 + 7;
-
-    long[][] dp = new long[m + 1][3];
-    dp[m][0] = 1;
-    for (int i = m - 1; i >= 0; i--) {
-      int d = (int) ((n >> i) & 1);
-
-      for (int j = 0; j <= 2; j++) {
-        for (int k = 0; k <= 2; k++) {
-          int ns = Math.min(2, j * 2 + d - k);
-          if (ns < 0)
-            continue;
-          dp[i][ns] += dp[i + 1][j];
-          dp[i][ns] %= mod;
-        }
+    int cnt = 0;
+    for (int i = 0; i < n; i++) {
+      if (s[i] == '1') {
+        cnt++;
       }
     }
-    System.out.println(Arrays.stream(dp[0]).sum() % mod);
+    if (cnt == 1) {
+      for (int i = 0; i < n; i++) {
+        int d = s[i] - '0';
+
+        if (d == 1) {
+          out.println(0);
+        } else {
+          out.println(i == n - 1 ? 2 : 1);
+        }
+      }
+      return;
+    } else if (cnt == 0) {
+      for (int i = 0; i < n; i++) {
+        out.println(1);
+      }
+      return;
+    }
+
+    int mod1 = 0;
+    int mod2 = 0;
+    for (int i = 0; i < n; i++) {
+      int d = s[i] - '0';
+      mod1 = (mod1 * 2 + d) % (cnt - 1);
+      mod2 = (mod2 * 2 + d) % (cnt + 1);
+    }
+
+    int[] a = new int[n];
+    int f1 = 1;
+    int f2 = 1;
+    for (int i = n - 1; i >= 0; i--) {
+      int d = s[i] - '0';
+
+      if (d == 1) {
+        a[i] = (mod1 - f1 + cnt - 1) % (cnt - 1);
+      } else {
+        a[i] = (mod2 + f2 + cnt + 1) % (cnt + 1);
+      }
+
+      f1 = f1 * 2 % (cnt - 1);
+      f2 = f2 * 2 % (cnt + 1);
+    }
+
+    for (int v : a) {
+      out.println(f(v));
+    }
+  }
+
+  private static int f(int v) {
+    int ret = 1;
+    while (v > 0) {
+      ret++;
+      v = v % Integer.bitCount(v);
+    }
+    return ret;
   }
 
   public static void main(String[] args) {

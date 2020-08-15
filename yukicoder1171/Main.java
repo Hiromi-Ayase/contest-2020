@@ -3,27 +3,46 @@ import java.util.Arrays;
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    int m = 62;
+    char[] s = ns();
+    int n = s.length;
 
     int mod = (int) 1e9 + 7;
 
-    long[][] dp = new long[m + 1][3];
-    dp[m][0] = 1;
-    for (int i = m - 1; i >= 0; i--) {
-      int d = (int) ((n >> i) & 1);
+    long[][] dp = new long[n + 1][27];
+    long[][] dp2 = new long[n + 1][27];
+    dp[0][0] = 1;
 
-      for (int j = 0; j <= 2; j++) {
-        for (int k = 0; k <= 2; k++) {
-          int ns = Math.min(2, j * 2 + d - k);
-          if (ns < 0)
-            continue;
-          dp[i][ns] += dp[i + 1][j];
-          dp[i][ns] %= mod;
+    for (int i = 0; i < n; i++) {
+      int c = s[i] - 'a' + 1;
+      for (int j = 1; j <= 26; j++) {
+        dp[i + 1][j] += dp[i][j];
+        dp[i + 1][c] += dp[i][j];
+
+        dp2[i + 1][j] += dp2[i][j];
+        if (c == j) {
+          dp2[i + 1][c] += dp2[i][j];
+        } else {
+          dp2[i + 1][c] += dp2[i][j] + dp[i][j];
         }
       }
+      dp[i + 1][0] += dp[i][0];
+      dp[i + 1][c] += dp[i][0];
+
+      dp2[i + 1][c] += dp[i][0];
+
+      for (int j = 1; j <= 26; j++) {
+        dp[i + 1][j] %= mod;
+        dp2[i + 1][j] %= mod;
+      }
     }
-    System.out.println(Arrays.stream(dp[0]).sum() % mod);
+
+    long ret = 0;
+    for (int i = 1; i <= 26; i++) {
+      ret += dp2[n][i];
+      ret %= mod;
+    }
+
+    System.out.println(ret);
   }
 
   public static void main(String[] args) {

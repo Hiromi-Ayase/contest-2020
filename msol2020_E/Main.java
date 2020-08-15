@@ -3,27 +3,105 @@ import java.util.Arrays;
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    int m = 62;
+    n = ni();
 
-    int mod = (int) 1e9 + 7;
+    x = new int[n][3];
+    y = new int[n][3];
+    p = new int[n];
+    for (int i = 0; i < n; i++) {
+      x[i][0] = ni();
+      x[i][1] = i;
+      y[i][0] = ni();
+      y[i][1] = i;
+      p[i] = ni();
+    }
 
-    long[][] dp = new long[m + 1][3];
-    dp[m][0] = 1;
-    for (int i = m - 1; i >= 0; i--) {
-      int d = (int) ((n >> i) & 1);
+    Arrays.sort(x, (o1, o2) -> o1[0] - o2[0]);
+    Arrays.sort(y, (o1, o2) -> o1[0] - o2[0]);
 
-      for (int j = 0; j <= 2; j++) {
-        for (int k = 0; k <= 2; k++) {
-          int ns = Math.min(2, j * 2 + d - k);
-          if (ns < 0)
-            continue;
-          dp[i][ns] += dp[i + 1][j];
-          dp[i][ns] %= mod;
+    invx = new int[n];
+    invy = new int[n];
+    for (int i = 0; i < n; i++) {
+      invx[x[i][1]] = i;
+      invy[y[i][1]] = i;
+    }
+
+    ret = new long[n + 1];
+    Arrays.fill(ret, Long.MAX_VALUE);
+    min = new int[n];
+    dfs(0, 0);
+
+    for (int i = 0; i <= n; i++) {
+      System.out.println(ret[i]);
+    }
+  }
+
+  private static int n;
+  private static int[] min;
+  private static int[][] x;
+  private static int[][] y;
+  private static int[] p;
+  private static int[] invy;
+  private static int[] invx;
+  private static long[] ret;
+
+  private static void dfs(int i, int num) {
+    if (i == n) {
+      for (int j = 0; j < n; j++) {
+        min[j] = Math.min(Math.abs(y[invy[j]][0]), Math.abs(x[invx[j]][0]));
+      }
+
+      int lastX1 = Integer.MIN_VALUE / 2;
+      int lastX2 = Integer.MAX_VALUE / 2;
+      int lastY1 = Integer.MIN_VALUE / 2;
+      int lastY2 = Integer.MAX_VALUE / 2;
+      for (int j1 = 0, j2 = n - 1; j1 < n; j1++, j2--) {
+        if (x[j1][2] == 1) {
+          lastX1 = x[j1][0];
+          min[x[j1][1]] = 0;
+        } else {
+          min[x[j1][1]] = Math.min(min[x[j1][1]], (x[j1][0] - lastX1));
+        }
+        if (x[j2][2] == 1) {
+          lastX2 = x[j2][0];
+          min[x[j2][1]] = 0;
+        } else {
+          min[x[j2][1]] = Math.min(min[x[j2][1]], -(x[j2][0] - lastX2));
+        }
+        if (y[j1][2] == 1) {
+          lastY1 = y[j1][0];
+          min[y[j1][1]] = 0;
+        } else {
+          min[y[j1][1]] = Math.min(min[y[j1][1]], (y[j1][0] - lastY1));
+        }
+        if (y[j2][2] == 1) {
+          lastY2 = y[j2][0];
+          min[y[j2][1]] = 0;
+        } else {
+          min[y[j2][1]] = Math.min(min[y[j2][1]], -(y[j2][0] - lastY2));
         }
       }
+      long now = 0;
+      for (int j = 0; j < n; j++) {
+        now += (long) min[j] * p[j];
+      }
+      ret[num] = Math.min(ret[num], now);
+
+      return;
     }
-    System.out.println(Arrays.stream(dp[0]).sum() % mod);
+
+    int idx = invx[i];
+    int idy = invy[i];
+
+    x[idx][2] = 0;
+    y[idy][2] = 0;
+    dfs(i + 1, num);
+    x[idx][2] = 1;
+    y[idy][2] = 0;
+    dfs(i + 1, num + 1);
+    x[idx][2] = 0;
+    y[idy][2] = 1;
+    dfs(i + 1, num + 1);
   }
 
   public static void main(String[] args) {

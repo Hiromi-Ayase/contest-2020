@@ -1,29 +1,45 @@
-import java.util.Arrays;
 
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    int m = 62;
-
+    int n = ni();
+    int h = ni();
+    int d = ni();
     int mod = (int) 1e9 + 7;
 
-    long[][] dp = new long[m + 1][3];
-    dp[m][0] = 1;
-    for (int i = m - 1; i >= 0; i--) {
-      int d = (int) ((n >> i) & 1);
+    long[] dp = new long[h + 1];
+    dp[0] = 1;
 
-      for (int j = 0; j <= 2; j++) {
-        for (int k = 0; k <= 2; k++) {
-          int ns = Math.min(2, j * 2 + d - k);
-          if (ns < 0)
-            continue;
-          dp[i][ns] += dp[i + 1][j];
-          dp[i][ns] %= mod;
-        }
-      }
+    long fs = 0;
+    long f = 1;
+    for (int i = 1; i <= n; i++) {
+      f = f * i % mod;
+      fs = (fs + f) % mod;
     }
-    System.out.println(Arrays.stream(dp[0]).sum() % mod);
+
+    long sum = 0;
+    for (int i = 1; i <= h; i++) {
+      sum += dp[i - 1];
+      sum %= mod;
+      dp[i] = sum;
+
+      if (i >= d) {
+        sum += mod - dp[i - d];
+        sum %= mod;
+      }
+
+      // min -> m
+      dp[i] *= fs;
+      dp[i] %= mod;
+    }
+
+    long ret = 0;
+    for (int i = 1; i <= d; i++) {
+      ret += dp[h - i];
+      ret %= mod;
+    }
+    System.out.println(ret * f % mod);
+
   }
 
   public static void main(String[] args) {

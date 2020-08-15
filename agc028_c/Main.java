@@ -1,29 +1,64 @@
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    int m = 62;
+    int n = ni();
 
-    int mod = (int) 1e9 + 7;
+    int[][] p = new int[n * 2][3];
+    int amin = Integer.MAX_VALUE;
+    int bmin = Integer.MAX_VALUE;
+    int amax = 0;
+    int bmax = 0;
+    for (int i = 0; i < n; i++) {
+      int a = ni();
+      int b = ni();
+      p[i * 2 + 0] = new int[] { a, i, 0 };
+      p[i * 2 + 1] = new int[] { b, i, 1 };
 
-    long[][] dp = new long[m + 1][3];
-    dp[m][0] = 1;
-    for (int i = m - 1; i >= 0; i--) {
-      int d = (int) ((n >> i) & 1);
+      amax = Math.max(amax, a);
+      amin = Math.min(amin, a);
+      bmax = Math.max(bmax, b);
+      bmin = Math.min(bmin, b);
+    }
+    Arrays.sort(p, (o1, o2) -> o1[0] - o2[0]);
 
-      for (int j = 0; j <= 2; j++) {
-        for (int k = 0; k <= 2; k++) {
-          int ns = Math.min(2, j * 2 + d - k);
-          if (ns < 0)
-            continue;
-          dp[i][ns] += dp[i + 1][j];
-          dp[i][ns] %= mod;
-        }
+    long ret = 0;
+    for (int i = 0; i < n; i++) {
+      ret += p[i][0];
+    }
+    if (amax <= bmin || bmax <= amin) {
+      System.out.println(ret);
+      return;
+    } else {
+      Set<Integer> half = new HashSet<>();
+      for (int i = 0; i < n; i++) {
+        half.add(p[i][1]);
+      }
+      if (half.size() < n) {
+        System.out.println(ret);
+        return;
+      }
+      int ptr = n - 1;
+      int cnt = 0;
+      while (ptr >= 0 && p[ptr][0] == p[n - 1][0]) {
+        ptr--;
+        cnt++;
+      }
+
+      if (cnt >= 2 || p[n][1] != p[n - 1][1]) {
+        ret += p[n][0] - p[n - 1][0];
+        System.out.println(ret);
+      } else {
+        int x = p[n - 2][1] != p[n + 0][1] ? p[n + 0][0] - p[n - 2][0] : Integer.MAX_VALUE;
+        int y = p[n - 1][1] != p[n + 1][1] ? p[n + 1][0] - p[n - 1][0] : Integer.MAX_VALUE;
+        ret += Math.min(x, y);
+        System.out.println(ret);
       }
     }
-    System.out.println(Arrays.stream(dp[0]).sum() % mod);
+
   }
 
   public static void main(String[] args) {
