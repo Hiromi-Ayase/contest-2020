@@ -1,4 +1,3 @@
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
@@ -33,19 +32,40 @@ public class Main {
       }
     });
 
-    d.put("", 0L);
-    q.add("");
+    for (int i = 0; i < n; i++) {
+      int m = s[i].length();
+      for (int j = 0; j <= m; j++) {
+        {
+          String t1 = trim(s[i].substring(0, j), s[i].substring(j));
+          if (t1 != null && c[i] < d.getOrDefault(t1, Long.MAX_VALUE)) {
+            d.put(t1, c[i]);
+            q.add(t1);
+          }
+        }
+
+        if (j < m) {
+          String t2 = trim(s[i].substring(0, j), s[i].substring(j + 1));
+          if (t2 != null && c[i] < d.getOrDefault(t2, Long.MAX_VALUE)) {
+            d.put(t2, c[i]);
+            q.add(t2);
+          }
+        }
+      }
+    }
+
+    int max = 0;
+    for (String t : s) {
+      max = Math.max(max, t.length());
+    }
 
     while (q.size() > 0) {
       String cur = q.pollFirst();
-      if (cur.length() > 100)
-        continue;
-      if (isPalindrome(cur)) {
-        return d.get(cur);
-      }
 
       for (int i = 0; i < n; i++) {
-        String next = cur + s[i];
+        String next = cur.startsWith("$") ? trim(s[i], cur) : trim(cur, s[i]);
+        if (next == null || next.length() >= max + 1)
+          continue;
+
         long nd = d.get(cur) + c[i];
         if (nd < d.getOrDefault(next, Long.MAX_VALUE)) {
           q.remove(next);
@@ -55,18 +75,28 @@ public class Main {
       }
     }
 
-    return -1;
+    return d.getOrDefault("$", -1L);
   }
 
-  private static boolean isPalindrome(String s) {
-    if (s.length() == 0)
-      return false;
-    for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
-      if (s.charAt(i) != s.charAt(j)) {
-        return false;
+  private static String trim(String prefix, String suffix) {
+    prefix = prefix.replace("$", "");
+    suffix = suffix.replace("$", "");
+
+    if (prefix.length() >= suffix.length()) {
+      for (int i = 0; i < suffix.length(); i++) {
+        if (prefix.charAt(prefix.length() - i - 1) != suffix.charAt(i)) {
+          return null;
+        }
       }
+      return prefix.substring(0, prefix.length() - suffix.length()) + "$";
+    } else {
+      for (int i = 0; i < prefix.length(); i++) {
+        if (prefix.charAt(prefix.length() - i - 1) != suffix.charAt(i)) {
+          return null;
+        }
+      }
+      return "$" + suffix.substring(prefix.length());
     }
-    return true;
   }
 
   public static void main(String[] args) {
