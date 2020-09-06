@@ -45,6 +45,9 @@
 		},
 		{
 			"path": "leetcode5510"
+		},
+		{
+			"path": "../Library"
 		}
 	],
 	"settings": {
