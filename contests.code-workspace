@@ -33,6 +33,18 @@
 		},
 		{
 			"path": "yukicoder1190"
+		},
+		{
+			"path": "leetcode5507"
+		},
+		{
+			"path": "leetcode5508"
+		},
+		{
+			"path": "leetcode5509"
+		},
+		{
+			"path": "leetcode5510"
 		}
 	],
 	"settings": {

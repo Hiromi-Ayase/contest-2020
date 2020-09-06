@@ -1,8 +1,10 @@
+import java.util.*;
 
 public class Main {
 
   private static void solve() {
     int n = ni();
+
   }
 
   public static void main(String[] args) {
