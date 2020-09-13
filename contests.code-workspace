@@ -1,10 +1,6 @@
 {
 	"folders": [
 		{
-			"name": "Library",
-			"path": "../Library"
-		},
-		{
 			"name": "work",
 			"path": "work"
 		},
@@ -52,10 +48,25 @@
 			"path": "cf668_A"
 		},
 		{
-			"path": "cf668_B"
+			"path": "aclpra_D"
 		},
 		{
-			"path": "cf668_C"
+			"path": "abc178_A"
+		},
+		{
+			"path": "abc178_B"
+		},
+		{
+			"path": "abc178_C"
+		},
+		{
+			"path": "abc178_D"
+		},
+		{
+			"path": "abc178_E"
+		},
+		{
+			"path": "abc178_F"
 		}
 	],
 	"settings": {
