@@ -1,4 +1,4 @@
-
+@SuppressWarnings("unused")
 public class Main {
   private static int mod = (int) 1e9;
   private static int[][] g;

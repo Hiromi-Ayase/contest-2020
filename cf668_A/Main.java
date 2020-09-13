@@ -1,56 +1,49 @@
+import java.util.*;
+
 @SuppressWarnings("unused")
 public class Main {
 
   private static void solve() {
-    int n = ni();
-    long[] a = nal(n);
+    int t = ni();
+    for (int i = 0; i < t; i++) {
+      int n = ni();
+      int k = ni();
+      char[] s = ns();
 
-    for (long v : a) {
-      if (v == 0) {
-        System.out.println(0);
-        return;
-      }
+      System.out.println(solve(n, k, s) ? "YES" : "NO");
     }
-
-    long x = 1;
-    int right = 0;
-    long[] b = new long[n + 1];
-    long[] c = new long[n + 1];
-    for (int left = 0; left < n; left++) {
-      while (right < n && x * a[right] < (int) 1e9) {
-        x *= a[right++];
-      }
-      int v = right - left;
-      b[left] = v;
-      c[right]++;
-
-      x /= a[left];
-    }
-
-    long s = 0;
-    long t = 0;
-    long ret = 1;
-    int mod = (int) 1e9 + 7;
-    for (int i = 0; i < n; i++) {
-      s += b[i];
-      t += 1 - c[i];
-      ret *= pow(a[i], s, mod);
-      s -= t;
-      ret %= mod;
-    }
-    System.out.println(ret);
   }
 
-  private static long pow(long a, long n, long mod) {
-    // a %= mod;
-    long ret = 1;
-    int x = 63 - Long.numberOfLeadingZeros(n);
-    for (; x >= 0; x--) {
-      ret = ret * ret % mod;
-      if (n << 63 - x < 0)
-        ret = ret * a % mod;
+  static boolean solve(int n, int k, char[] s) {
+
+    for (int i = 0; i < k; i++) {
+      int x = -1;
+      for (int j = i; j < n; j += k) {
+        if (s[j] == '?') continue;
+        if (x < 0) {
+          x = s[j];
+        } else if (s[j] != x) {
+          return false;
+        }
+      }
+
+      for (int j = i; j < n; j += k) {
+        s[i] = (char)x;
+      }
     }
-    return ret;
+
+    int zero = 0;
+    int one = 0;
+    for (int i = 0; i < k; i ++) {
+      if (s[i] == '0') {
+        zero ++;
+      } else if (s[i] == '1') {
+        one ++;
+      }
+    }
+
+    int q = k - zero - one;
+    return one <= k/2 && k/2 <= one + q;
   }
 
   public static void main(String[] args) {

@@ -1,4 +1,4 @@
-
+@SuppressWarnings("unused")
 public class Main {
 
   private static void solve() {

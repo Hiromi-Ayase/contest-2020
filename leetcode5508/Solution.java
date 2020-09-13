@@ -3,6 +3,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public class Solution {
   public int numTriplets(int[] nums1, int[] nums2) {
     int n = nums1.length;

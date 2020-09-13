@@ -1,4 +1,5 @@
 import java.util.Arrays;
+@SuppressWarnings("unused")
 
 public class Main {
 
