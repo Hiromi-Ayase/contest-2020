@@ -5,6 +5,59 @@ public class Main {
 
   private static void solve() {
     int n = ni();
+    int[] a = na(n);
+    int[] b = na(n);
+
+    for (int i = 0, j = n - 1; i < j; i++, j--) {
+      int tmp = b[i];
+      b[i] = b[j];
+      b[j] = tmp;
+    }
+
+    int left = n;
+    int right = -1;
+    int same = -1;
+    int cnt = 0;
+    for (int i = 0; i < n; i ++) {
+      if (a[i] == b[i]) {
+        left = Math.min(i, left);
+        right = Math.max(i, right);
+        same = a[i];
+        cnt ++;
+      }
+    }
+
+    if (right < 0) {
+      out.println("Yes");
+      for (int v : b) {
+        out.print(v + " ");
+      }
+      out.println();
+      return;
+    } else {
+      int p = left;
+      for (int i = 0; i < n; i ++) {
+        if (a[i] != same && b[i] != same) {
+          int tmp = b[p];
+          b[p] = b[i];
+          b[i] = tmp;
+          p ++;
+        }
+        if (p > right) {
+          break;
+        }
+      }
+
+      if (p <= right) {
+        System.out.println("No");
+      } else {
+        out.println("Yes");
+        for (int v : b) {
+          out.print(v + " ");
+        }
+        out.println();
+      }
+    }
   }
 
   public static void main(String[] args) {

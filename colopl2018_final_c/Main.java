@@ -1,25 +1,92 @@
 import java.util.*;
 
+class EnvelopeLinear {
+  public static final long INF = Integer.MIN_VALUE;
+
+  public long[] xs;
+  public long[] intercepts, slopes;
+  public int p;
+
+  public EnvelopeLinear(int n) {
+    xs = new long[n];
+    intercepts = new long[n];
+    slopes = new long[n];
+    p = 0;
+  }
+
+  public void clear() {
+    p = 0;
+  }
+
+  public void add(long slope, long intercept) {
+    assert p == 0 || slopes[p - 1] >= slope;
+    while (p > 0) {
+      int i = p - 1;
+      if (intercept + xs[i] * slope <= intercepts[i] + xs[i] * slopes[i]) { // x=xs[i]
+        p--;
+        continue;
+      }
+      if (slope == slopes[i]) {
+        if (intercept >= intercepts[i]) {
+          return;
+        } else {
+          p--;
+          continue;
+        }
+      }
+      // y=sx+i vs y=Sx+I
+      // sx+i=Sx+I
+      // x=(i-I)/(S-s)
+      long num = intercept - intercepts[i];
+      long den = slopes[i] - slope;
+      long nx = num < 0 ? num / den : (num + den - 1) / den;
+      xs[p] = nx;
+      intercepts[p] = intercept;
+      slopes[p] = slope;
+      p++;
+      return;
+    }
+
+    xs[p] = INF;
+    intercepts[p] = intercept;
+    slopes[p] = slope;
+    p++;
+  }
+
+  public int argmin(int x) {
+    if (p <= 0)
+      return -1;
+    int ind = Arrays.binarySearch(xs, 0, p, x);
+    if (ind < 0)
+      ind = -ind - 2;
+    return ind;
+  }
+
+  public long min(long x) {
+    if (p <= 0)
+      return Long.MIN_VALUE / 5;
+    int ind = Arrays.binarySearch(xs, 0, p, x);
+    if (ind < 0)
+      ind = -ind - 2;
+    return slopes[ind] * x + intercepts[ind];
+  }
+}
+
 @SuppressWarnings("unused")
 public class Main {
 
   private static void solve() {
-    int s = ni();
-    int mod = (int) 1e9 + 7;
+    int n = ni();
+    long[] a = nal(n);
+    EnvelopeLinear eh = new EnvelopeLinear(n);
 
-    long[][] dp = new long[s + 1][s + 1];
-    dp[0][0] = 1;
-    long ret = 0; 
-    for (int i = 0; i < s; i++) {
-      for (int j = 0; j + 3 <= s; j++) {
-        dp[i + 1][j + 3] += (j == 0 ? 0 : dp[i + 1][j + 2]) + dp[i][j];
-        dp[i + 1][j + 3] %= mod;
-      }
-      ret += dp[i][s];
-      ret %= mod;
+    for (int j = 1; j <= n; j++) {
+      eh.add(-2 * j, a[j - 1] + (long) j * j);
     }
 
-    System.out.println(ret);
+    for (int i = 1; i <= n; i++) {
+      out.println(eh.min(i) + (long) i * i);
+    }
   }
 
   public static void main(String[] args) {

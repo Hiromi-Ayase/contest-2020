@@ -4,22 +4,29 @@ import java.util.*;
 public class Main {
 
   private static void solve() {
-    int s = ni();
-    int mod = (int) 1e9 + 7;
+    int n = ni();
+    int[][] p = ntable(n, 3);
+    int mod = 998244353;
 
-    long[][] dp = new long[s + 1][s + 1];
-    dp[0][0] = 1;
-    long ret = 0; 
-    for (int i = 0; i < s; i++) {
-      for (int j = 0; j + 3 <= s; j++) {
-        dp[i + 1][j + 3] += (j == 0 ? 0 : dp[i + 1][j + 2]) + dp[i][j];
-        dp[i + 1][j + 3] %= mod;
-      }
-      ret += dp[i][s];
-      ret %= mod;
+    int[][][] dp = new int[n + 1][n + 1][2];
+    dp[0][0][0] = 1;
+
+  }
+
+  private static boolean can(int[] a, int[] b) {
+    int t = Math.abs(b[2] - a[2]);
+    if (b[0] <= a[0] && a[0] <= b[1] || b[0] <= a[1] && a[1] <= b[1] || a[0] <= b[0] && b[0] <= a[1]
+        || a[0] <= b[1] && b[1] <= a[1]) {
+      return true;
     }
 
-    System.out.println(ret);
+    int d = Integer.MAX_VALUE;
+    d = Math.min(d, Math.abs(a[0] - b[0]));
+    d = Math.min(d, Math.abs(a[1] - b[0]));
+    d = Math.min(d, Math.abs(a[0] - b[1]));
+    d = Math.min(d, Math.abs(a[1] - b[1]));
+
+    return d <= t;
   }
 
   public static void main(String[] args) {

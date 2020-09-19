@@ -4,22 +4,7 @@ import java.util.*;
 public class Main {
 
   private static void solve() {
-    int s = ni();
-    int mod = (int) 1e9 + 7;
-
-    long[][] dp = new long[s + 1][s + 1];
-    dp[0][0] = 1;
-    long ret = 0; 
-    for (int i = 0; i < s; i++) {
-      for (int j = 0; j + 3 <= s; j++) {
-        dp[i + 1][j + 3] += (j == 0 ? 0 : dp[i + 1][j + 2]) + dp[i][j];
-        dp[i + 1][j + 3] %= mod;
-      }
-      ret += dp[i][s];
-      ret %= mod;
-    }
-
-    System.out.println(ret);
+    int n = ni();
   }
 
   public static void main(String[] args) {

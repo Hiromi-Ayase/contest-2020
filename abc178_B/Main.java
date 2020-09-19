@@ -4,7 +4,14 @@ import java.util.*;
 public class Main {
 
   private static void solve() {
-    int n = ni();
+    long a = nl();
+    long b = nl();
+    long c = nl();
+    long d = nl();
+
+    long x = Math.max(a * c, b * d);
+    long y = Math.max(a * d, b * c);
+    System.out.println(Math.max(x, y));
   }
 
   public static void main(String[] args) {

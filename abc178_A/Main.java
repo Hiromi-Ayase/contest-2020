@@ -5,6 +5,7 @@ public class Main {
 
   private static void solve() {
     int n = ni();
+    System.out.println(n == 0 ? 1 : 0);
   }
 
   public static void main(String[] args) {

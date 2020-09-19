@@ -5,6 +5,20 @@ public class Main {
 
   private static void solve() {
     int n = ni();
+    int[][] p = ntable(n, 2);
+
+    long[][] q = new long[n][2];
+    for (int i = 0; i < n; i ++) {
+      q[i][0] = p[i][0] + p[i][1];
+      q[i][1] = p[i][0] - p[i][1];
+    }
+
+    Arrays.sort(q, (o1, o2) -> Long.signum(o1[0] - o2[0]));
+    long x = Math.abs(q[0][0] - q[n-1][0]);
+    Arrays.sort(q, (o1, o2) -> Long.signum(o1[1] - o2[1]));
+    long y = Math.abs(q[0][1] - q[n-1][1]);
+
+    System.out.println(Math.max(x, y));
   }
 
   public static void main(String[] args) {

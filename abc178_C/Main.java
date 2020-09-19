@@ -5,6 +5,27 @@ public class Main {
 
   private static void solve() {
     int n = ni();
+
+    int mod = (int)1e9 + 7;
+
+    long total = 1;
+    for (int i = 0; i < n; i ++) {
+      total *= 10;
+      total %= mod;
+    }
+    long minus = 1;
+    long minus2 = 1;
+    for (int i = 0; i < n; i ++) {
+      minus *= 9;
+      minus2 *= 8;
+      minus %= mod;
+      minus2 %= mod;
+    }
+    total = (total - minus + mod) % mod;
+    total = (total - minus + mod) % mod;
+    total = (total + minus2) % mod;
+
+    System.out.println(total);
   }
 
   public static void main(String[] args) {

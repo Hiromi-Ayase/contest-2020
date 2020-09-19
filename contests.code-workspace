@@ -1,82 +1,86 @@
 {
-	"folders": [
-		{
-			"name": "work",
-			"path": "work"
-		},
-		{
-			"name": "arc086_C",
-			"path": "arc086_C"
-		},
-		{
-			"name": "cgr8_F",
-			"path": "cgr8_F"
-		},
-		{
-			"name": "yukicoder1085",
-			"path": "yukicoder1085"
-		},
-		{
-			"name": "agc046_D",
-			"path": "agc046_D"
-		},
-		{
-			"name": "agc034_C",
-			"path": "agc034_C"
-		},
-		{
-			"name": "msol2020_E",
-			"path": "msol2020_E"
-		},
-		{
-			"name": "arc102_c",
-			"path": "arc102_c"
-		},
-		{
-			"name": "agc028_c",
-			"path": "agc028_c"
-		},
-		{
-			"name": "yukicoder1084",
-			"path": "yukicoder1084"
-		},
-		{
-			"name": "yukicoder1190",
-			"path": "yukicoder1190"
-		},
-		{
-			"path": "cf668_A"
-		},
-		{
-			"path": "aclpra_D"
-		},
-		{
-			"path": "abc178_A"
-		},
-		{
-			"path": "abc178_B"
-		},
-		{
-			"path": "abc178_C"
-		},
-		{
-			"path": "abc178_D"
-		},
-		{
-			"path": "abc178_E"
-		},
-		{
-			"path": "abc178_F"
-		}
-	],
-	"settings": {
-		"editor.tabSize": 2,
-		"editor.tabCompletion": "on",
-		"java.project.referencedLibraries": [
-			"lib/**/*.jar",
-			"src/uwi/lib/commons-lang3-3.1.jar",
-			"src/uwi/lib/jcommander-1.48.jar",
-			"src/uwi/lib/testng-6.9.10.jar"
-		]
-	}
+  "folders": [
+    {
+      "name": "work",
+      "path": "work"
+    },
+    {
+      "name": "arc086_C",
+      "path": "arc086_C"
+    },
+    {
+      "name": "cgr8_F",
+      "path": "cgr8_F"
+    },
+    {
+      "name": "yukicoder1085",
+      "path": "yukicoder1085"
+    },
+    {
+      "name": "agc046_D",
+      "path": "agc046_D"
+    },
+    {
+      "name": "agc034_C",
+      "path": "agc034_C"
+    },
+    {
+      "name": "msol2020_E",
+      "path": "msol2020_E"
+    },
+    {
+      "name": "arc102_c",
+      "path": "arc102_c"
+    },
+    {
+      "name": "agc028_c",
+      "path": "agc028_c"
+    },
+    {
+      "name": "yukicoder1084",
+      "path": "yukicoder1084"
+    },
+    {
+      "name": "yukicoder1190",
+      "path": "yukicoder1190"
+    },
+    {
+      "path": "cf668_A"
+    },
+    {
+      "path": "aclpra_D"
+    },
+    {
+      "path": "hupc2020day3_j"
+    },
+    {
+      "path": "abc179_A"
+    },
+    {
+      "path": "abc179_B"
+    },
+    {
+      "path": "abc179_C"
+    },
+    {
+      "path": "abc179_D"
+    },
+    {
+      "path": "abc179_E"
+    },
+    {
+      "path": "abc179_F"
+    }
+  ],
+  "settings": {
+    "editor.tabSize": 2,
+    "editor.tabCompletion": "on",
+    "java.project.referencedLibraries": [
+      "lib/**/*.jar",
+      "src/uwi/lib/commons-lang3-3.1.jar",
+      "src/uwi/lib/jcommander-1.48.jar",
+      "src/uwi/lib/testng-6.9.10.jar"
+    ],
+    "editor.formatOnSave": true
+  }
 }
