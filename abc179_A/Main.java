@@ -4,7 +4,14 @@ import java.util.*;
 public class Main {
 
   private static void solve() {
-    int n = ni();
+
+    char[] s = ns();
+    if (s[s.length - 1] == 's') {
+      System.out.println(new String(s) + "es");
+    } else {
+      System.out.println(new String(s) + "s");
+    }
+
   }
 
   public static void main(String[] args) {

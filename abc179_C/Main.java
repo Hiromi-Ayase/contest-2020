@@ -5,6 +5,12 @@ public class Main {
 
   private static void solve() {
     int n = ni();
+
+    long ret = 0;
+    for (int a = 1; a < n; a++) {
+      ret += (n - 1) / a;
+    }
+    System.out.println(ret);
   }
 
   public static void main(String[] args) {

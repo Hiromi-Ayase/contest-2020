@@ -4,65 +4,77 @@ import java.util.*;
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    long x = nl();
-    int m = ni();
-
-    if (x == 0) {
-      System.out.println(0);
-      return;
+    int n = ni();
+    int k = ni();
+    int[] p = na(n);
+    int[] q = new int[n];
+    for (int i = 0; i < n; i++) {
+      p[i]--;
+      q[p[i]] = i;
     }
 
-    if (m == 1) {
-      System.out.println(n);
-      return;
-    }
+    int m = n - k + 1;
 
-    Set<Long> set = new HashSet<>();
-    long[] a = new long[m];
-    a[0] = x;
-    set.add(x);
-
-    int from = -1;
-    long y = x;
-    for (int i = 1; i < m; i++) {
-      y = y * y % m;
-      if (!set.contains(y)) {
-        a[i] = y;
-        set.add(y);
-      } else {
-        a = Arrays.copyOf(a, i);
-        for (from = 0; a[from] != y; from++)
-          ;
-        break;
-      }
-    }
-
+    long[] a = new long[n];
+    double[] da = new double[n];
     long ret = 0;
-    for (int i = 0; i < Math.min(from, n); i++) {
-      ret += a[i];
-    }
-    if (n <= from) {
-      System.out.println(ret);
-      return;
-    }
+    double dret = 0;
+    int mod = 998244353;
 
-    n -= from;
+    long invK = invl(k, mod);
+    for (int i = 0; i < n; i++) {
+      int idx = q[i];
 
-    int k = a.length - from;
-    long[] b = new long[k];
-    long sum = 0;
-    for (int i = 0; i < k; i++) {
-      b[i] = a[i + from];
-      sum += b[i];
-    }
+      long[] b = new long[n];
+      double[] db = new double[n];
+      long x = 1;
+      long y = invK;
+      double dy = 1.0 / k;
+      for (int j = idx, s = 0; j < n; j++, s++) {
+        b[j] = x * y % mod;
+        b[j] %= mod;
 
-    ret += n / k * sum;
+        db[j] = x * dy;
+        if (j < m - 1) {
+          x = x * (k - 1) % mod;
+          y = y * invK % mod;
 
-    for (int i = 0; i < n % k; i++) {
-      ret += b[i];
+          dy = dy / k;
+        }
+      }
+
+      long sum = 0;
+      double dsum = 0;
+      for (int j = n - 1; j >= idx; j--) {
+        dret = db[j] * dsum;
+        dsum += da[j];
+        da[j] += db[j];
+
+        ret += b[j] * sum % mod;
+        sum += a[j];
+        a[j] += b[j];
+        sum %= mod;
+        ret %= mod;
+      }
+
     }
     System.out.println(ret);
+  }
+
+  public static long invl(long a, long mod) {
+    long b = mod;
+    long p = 1, q = 0;
+    while (b > 0) {
+      long c = a / b;
+      long d;
+      d = a;
+      a = b;
+      b = d % b;
+      d = p;
+      p = q;
+      q = d - c * q;
+    }
+    return p < 0 ? p + mod : p;
   }
 
   public static void main(String[] args) {

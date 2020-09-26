@@ -5,6 +5,54 @@ public class Main {
 
   private static void solve() {
     int n = ni();
+    int q = ni();
+
+    int ymin = n - 1;
+    int xmin = n - 1;
+
+    long[] yhist = new long[n];
+    long[] xhist = new long[n];
+    Arrays.fill(yhist, -1);
+    Arrays.fill(xhist, -1);
+
+    long ret = 0; // ひっくり返した数
+    for (int i = 0; i < q; i++) {
+      int t = ni();
+      if (t == 1) {
+        int x = ni() - 1;
+        // put(1, x)
+
+        long v;
+        if (x < xmin) {
+          xmin = x;
+          v = ymin - 1;
+
+          for (int p = x; p < n - 1 && xhist[p] < 0; p++) {
+            xhist[p] = v;
+          }
+        } else {
+          v = xhist[x];
+        }
+        ret += v;
+
+      } else {
+        int y = ni() - 1;
+        long v;
+        // put(y, 1)
+        if (y < ymin) {
+          ymin = y;
+          v = xmin - 1;
+          for (int p = y; p < n - 1 && yhist[p] < 0; p++) {
+            yhist[p] = v;
+          }
+        } else {
+          v = yhist[y];
+        }
+        ret += v;
+      }
+    }
+    ret = (long) (n - 2) * (n - 2) - ret;
+    System.out.println(ret);
   }
 
   public static void main(String[] args) {

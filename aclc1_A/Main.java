@@ -1,68 +1,107 @@
 import java.util.*;
 
+class DisjointSet {
+  public int[] upper; // minus:num_element(root) plus:root(normal)
+  // public int[] w;
+
+  public DisjointSet(int n) {
+    upper = new int[n];
+    Arrays.fill(upper, -1);
+    // w = new int[n];
+  }
+
+  public DisjointSet(DisjointSet ds) {
+    this.upper = Arrays.copyOf(ds.upper, ds.upper.length);
+  }
+
+  public int root(int x) {
+    return upper[x] < 0 ? x : (upper[x] = root(upper[x]));
+  }
+
+  public boolean equiv(int x, int y) {
+    return root(x) == root(y);
+  }
+
+  public boolean union(int x, int y) {
+    x = root(x);
+    y = root(y);
+    if (x != y) {
+      if (upper[y] < upper[x]) {
+        int d = x;
+        x = y;
+        y = d;
+      }
+      // w[x] += w[y];
+      upper[x] += upper[y];
+      upper[y] = x;
+    }
+    return x == y;
+  }
+
+  public int count() {
+    int ct = 0;
+    for (int u : upper) {
+      if (u < 0)
+        ct++;
+    }
+    return ct;
+  }
+
+  public int[][] toBucket() {
+    int n = upper.length;
+    int[][] ret = new int[n][];
+    int[] rp = new int[n];
+    for (int i = 0; i < n; i++) {
+      if (upper[i] < 0)
+        ret[i] = new int[-upper[i]];
+    }
+    for (int i = 0; i < n; i++) {
+      int r = root(i);
+      ret[r][rp[r]++] = i;
+    }
+    return ret;
+  }
+}
+
 @SuppressWarnings("unused")
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    long x = nl();
-    int m = ni();
-
-    if (x == 0) {
-      System.out.println(0);
-      return;
+    int n = ni();
+    int[][] p = new int[n][3];
+    for (int i = 0; i < n; i++) {
+      p[i][0] = i;
+      p[i][1] = ni() - 1;
+      p[i][2] = ni() - 1;
     }
 
-    if (m == 1) {
-      System.out.println(n);
-      return;
-    }
+    DisjointSet ds = new DisjointSet(n);
 
-    Set<Long> set = new HashSet<>();
-    long[] a = new long[m];
-    a[0] = x;
-    set.add(x);
+    Arrays.sort(p, (o1, o2) -> o1[1] - o2[1]);
 
-    int from = -1;
-    long y = x;
-    for (int i = 1; i < m; i++) {
-      y = y * y % m;
-      if (!set.contains(y)) {
-        a[i] = y;
-        set.add(y);
+    Deque<int[]> q = new ArrayDeque<>();
+
+    for (int[] v : p) {
+      int[] min = null;
+      while (q.size() > 0 && q.peekFirst()[2] < v[2]) {
+        int[] u = q.pollFirst();
+        ds.union(u[0], v[0]);
+        if (min == null) {
+          min = u;
+        }
+      }
+      if (min != null) {
+        q.addFirst(min);
       } else {
-        a = Arrays.copyOf(a, i);
-        for (from = 0; a[from] != y; from++)
-          ;
-        break;
+        q.addFirst(v);
       }
     }
 
-    long ret = 0;
-    for (int i = 0; i < Math.min(from, n); i++) {
-      ret += a[i];
-    }
-    if (n <= from) {
-      System.out.println(ret);
-      return;
+    for (int i = 0; i < n; i++) {
+      int x = ds.upper[ds.root(i)];
+      out.println(-x);
     }
 
-    n -= from;
-
-    int k = a.length - from;
-    long[] b = new long[k];
-    long sum = 0;
-    for (int i = 0; i < k; i++) {
-      b[i] = a[i + from];
-      sum += b[i];
-    }
-
-    ret += n / k * sum;
-
-    for (int i = 0; i < n % k; i++) {
-      ret += b[i];
-    }
-    System.out.println(ret);
   }
 
   public static void main(String[] args) {

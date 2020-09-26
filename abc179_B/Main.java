@@ -5,6 +5,23 @@ public class Main {
 
   private static void solve() {
     int n = ni();
+    int cnt = 0;
+
+    for (int i = 0; i < n; i++) {
+      int d1 = ni();
+      int d2 = ni();
+
+      if (d1 == d2) {
+        cnt++;
+      } else {
+        cnt = 0;
+      }
+      if (cnt >= 3) {
+        System.out.println("Yes");
+        return;
+      }
+    }
+    System.out.println("No");
   }
 
   public static void main(String[] args) {

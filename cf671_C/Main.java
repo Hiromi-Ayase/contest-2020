@@ -4,65 +4,30 @@ import java.util.*;
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    long x = nl();
-    int m = ni();
+    int t = ni();
 
-    if (x == 0) {
-      System.out.println(0);
-      return;
-    }
+    for (int i = 0; i < t; i++) {
+      int n = ni();
+      long x = nl();
+      long[] a = nal(n);
 
-    if (m == 1) {
-      System.out.println(n);
-      return;
-    }
+      long sum = 0;
+      int first = 0;
+      for (long v : a) {
+        if (v == x) {
+          first++;
+        }
+        sum += v;
+      }
 
-    Set<Long> set = new HashSet<>();
-    long[] a = new long[m];
-    a[0] = x;
-    set.add(x);
-
-    int from = -1;
-    long y = x;
-    for (int i = 1; i < m; i++) {
-      y = y * y % m;
-      if (!set.contains(y)) {
-        a[i] = y;
-        set.add(y);
+      if (first == n) {
+        System.out.println(0);
+      } else if (first >= 1 || sum % n == 0 && sum / n == x) {
+        System.out.println(1);
       } else {
-        a = Arrays.copyOf(a, i);
-        for (from = 0; a[from] != y; from++)
-          ;
-        break;
+        System.out.println(2);
       }
     }
-
-    long ret = 0;
-    for (int i = 0; i < Math.min(from, n); i++) {
-      ret += a[i];
-    }
-    if (n <= from) {
-      System.out.println(ret);
-      return;
-    }
-
-    n -= from;
-
-    int k = a.length - from;
-    long[] b = new long[k];
-    long sum = 0;
-    for (int i = 0; i < k; i++) {
-      b[i] = a[i + from];
-      sum += b[i];
-    }
-
-    ret += n / k * sum;
-
-    for (int i = 0; i < n % k; i++) {
-      ret += b[i];
-    }
-    System.out.println(ret);
   }
 
   public static void main(String[] args) {

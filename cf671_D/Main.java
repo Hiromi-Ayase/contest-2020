@@ -4,65 +4,72 @@ import java.util.*;
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    long x = nl();
-    int m = ni();
-
-    if (x == 0) {
+    int n = ni();
+    int[] a = na(n);
+    if (n == 1) {
       System.out.println(0);
+      System.out.println(a[0]);
       return;
     }
+    radixSort(a);
 
-    if (m == 1) {
-      System.out.println(n);
-      return;
-    }
+    int[] ret = new int[n];
+    int p = 1;
+    for (int i = 0; i < n; i++) {
+      ret[p] = a[i];
 
-    Set<Long> set = new HashSet<>();
-    long[] a = new long[m];
-    a[0] = x;
-    set.add(x);
-
-    int from = -1;
-    long y = x;
-    for (int i = 1; i < m; i++) {
-      y = y * y % m;
-      if (!set.contains(y)) {
-        a[i] = y;
-        set.add(y);
-      } else {
-        a = Arrays.copyOf(a, i);
-        for (from = 0; a[from] != y; from++)
-          ;
-        break;
+      p += 2;
+      if (p >= n) {
+        p = 0;
       }
     }
 
-    long ret = 0;
-    for (int i = 0; i < Math.min(from, n); i++) {
-      ret += a[i];
-    }
-    if (n <= from) {
-      System.out.println(ret);
-      return;
+    int ans = 0;
+    for (int i = 1; i < n - 1; i += 2) {
+      if (ret[i - 1] > ret[i] && ret[i] < ret[i + 1]) {
+        ans++;
+      }
     }
 
-    n -= from;
-
-    int k = a.length - from;
-    long[] b = new long[k];
-    long sum = 0;
-    for (int i = 0; i < k; i++) {
-      b[i] = a[i + from];
-      sum += b[i];
+    System.out.println(ans);
+    StringBuilder sb = new StringBuilder();
+    for (int v : ret) {
+      sb.append(v + " ");
     }
+    System.out.println(sb.substring(0, sb.length() - 1));
+  }
 
-    ret += n / k * sum;
+  public static int[] radixSort(int[] f) {
+    return radixSort(f, f.length);
+  }
 
-    for (int i = 0; i < n % k; i++) {
-      ret += b[i];
+  public static int[] radixSort(int[] f, int n) {
+    int[] to = new int[n];
+    {
+      int[] b = new int[65537];
+      for (int i = 0; i < n; i++)
+        b[1 + (f[i] & 0xffff)]++;
+      for (int i = 1; i <= 65536; i++)
+        b[i] += b[i - 1];
+      for (int i = 0; i < n; i++)
+        to[b[f[i] & 0xffff]++] = f[i];
+      int[] d = f;
+      f = to;
+      to = d;
     }
-    System.out.println(ret);
+    {
+      int[] b = new int[65537];
+      for (int i = 0; i < n; i++)
+        b[1 + (f[i] >>> 16)]++;
+      for (int i = 1; i <= 65536; i++)
+        b[i] += b[i - 1];
+      for (int i = 0; i < n; i++)
+        to[b[f[i] >>> 16]++] = f[i];
+      int[] d = f;
+      f = to;
+      to = d;
+    }
+    return f;
   }
 
   public static void main(String[] args) {

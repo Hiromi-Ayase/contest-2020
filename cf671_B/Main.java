@@ -4,65 +4,21 @@ import java.util.*;
 public class Main {
 
   private static void solve() {
-    long n = nl();
-    long x = nl();
-    int m = ni();
+    int t = ni();
+    outer: for (int i = 0; i < t; i++) {
+      long x = nl();
 
-    if (x == 0) {
-      System.out.println(0);
-      return;
-    }
+      long y = 1;
+      long cnt = 1;
+      x--;
+      while (y * 2 + (1L << cnt) * (1L << cnt) <= x) {
+        y = y * 2 + (1L << cnt) * (1L << cnt);
+        x -= y;
 
-    if (m == 1) {
-      System.out.println(n);
-      return;
-    }
-
-    Set<Long> set = new HashSet<>();
-    long[] a = new long[m];
-    a[0] = x;
-    set.add(x);
-
-    int from = -1;
-    long y = x;
-    for (int i = 1; i < m; i++) {
-      y = y * y % m;
-      if (!set.contains(y)) {
-        a[i] = y;
-        set.add(y);
-      } else {
-        a = Arrays.copyOf(a, i);
-        for (from = 0; a[from] != y; from++)
-          ;
-        break;
+        cnt++;
       }
+      System.out.println(cnt);
     }
-
-    long ret = 0;
-    for (int i = 0; i < Math.min(from, n); i++) {
-      ret += a[i];
-    }
-    if (n <= from) {
-      System.out.println(ret);
-      return;
-    }
-
-    n -= from;
-
-    int k = a.length - from;
-    long[] b = new long[k];
-    long sum = 0;
-    for (int i = 0; i < k; i++) {
-      b[i] = a[i + from];
-      sum += b[i];
-    }
-
-    ret += n / k * sum;
-
-    for (int i = 0; i < n % k; i++) {
-      ret += b[i];
-    }
-    System.out.println(ret);
   }
 
   public static void main(String[] args) {
