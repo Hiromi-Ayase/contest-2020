@@ -45,19 +45,39 @@
       "path": "yukicoder1190"
     },
     {
+      "name": "cf668_A",
       "path": "cf668_A"
     },
     {
+      "name": "hupc2020day3_j",
       "path": "hupc2020day3_j"
     },
     {
+      "name": "abl_F",
       "path": "abl_F"
     },
     {
+      "name": "aclpra_K",
       "path": "aclpra_K"
     },
     {
+      "name": "arc104_E",
       "path": "arc104_E"
+    },
+    {
+      "name": "joi2015yo_f",
+      "path": "joi2015yo_f"
+    },
+    {
+      "name": "agc047_B",
+      "path": "agc047_B"
+    },
+    {
+      "name": "yukicoder1255",
+      "path": "yukicoder1255"
+    },
+    {
+      "path": "hhkb2020_F"
     }
   ],
   "settings": {
