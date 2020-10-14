@@ -69,15 +69,14 @@
       "path": "joi2015yo_f"
     },
     {
-      "name": "agc047_B",
-      "path": "agc047_B"
-    },
-    {
       "name": "yukicoder1255",
       "path": "yukicoder1255"
     },
     {
       "path": "hhkb2020_F"
+    },
+    {
+      "path": "arc105_C"
     }
   ],
   "settings": {

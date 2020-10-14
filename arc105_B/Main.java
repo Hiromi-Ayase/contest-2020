@@ -5,30 +5,17 @@ public class Main {
 
   private static void solve() {
     int n = ni();
-    char[][] s = new char[n][];
+    TreeSet<Integer> set = new TreeSet<>();
     for (int i = 0; i < n; i++) {
-      s[i] = ns();
-    }
-    for (char[] t : s) {
-      for (int i = 0, j = t.length - 1; i < j; i++, j--) {
-        char tmp = t[i];
-        t[i] = t[j];
-        t[j] = tmp;
-      }
+      set.add(ni());
     }
 
-    Arrays.sort(s, Arrays::compare);
-
-    for (int i = 0; i < n - 1; i++) {
-      char[] a = s[i];
-      char[] b = s[i + 1];
-      int to = Math.min(a.length, b.length);
-
-      int cp = 0;
-      for (; cp < to && a[cp] == b[cp]; cp++)
-        ;
-
+    while (set.last() != set.first()) {
+      int v = set.pollLast();
+      set.add(v - set.first());
     }
+
+    System.out.println(set.first());
   }
 
   public static void main(String[] args) {
