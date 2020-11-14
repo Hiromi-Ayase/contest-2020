@@ -5,10 +5,6 @@
       "path": "work"
     },
     {
-      "name": "arc086_C",
-      "path": "arc086_C"
-    },
-    {
       "name": "cgr8_F",
       "path": "cgr8_F"
     },
@@ -77,6 +73,15 @@
     },
     {
       "path": "arc105_C"
+    },
+    {
+      "path": "ddcc2020_qual_f"
+    },
+    {
+      "path": "arc106_E"
+    },
+    {
+      "path": "abc173_f"
     }
   ],
   "settings": {
