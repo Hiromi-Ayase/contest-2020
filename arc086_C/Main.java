@@ -1,42 +1,147 @@
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 @SuppressWarnings("unused")
 public class Main {
-  private static int mod = (int) 1e9;
-  private static int[][] g;
-  private static long[] p2;
+  private static int mod = 1000000007;
 
   private static void solve() {
     int n = ni() + 1;
     int[] par = new int[n];
     par[0] = -1;
     for (int i = 1; i < n; i++) {
-      par[i] = ni() - 1;
+      par[i] = ni();
     }
-    g = parentToG(par);
+    int[][] g = parentToChildren(par);
 
-    p2 = new long[n + 1];
+    long[] p2 = new long[n + 1];
     p2[0] = 1;
     for (int i = 0; i < n; i++) {
       p2[i + 1] = p2[i] * 2 % mod;
     }
+    int[][] p3 = parents3(parentToG(par), 0);
+    int[] dep = p3[2];
+    int maxDep = Arrays.stream(dep).max().getAsInt();
+
+    int[] ds = new int[maxDep + 1];
+    for (int i = 0; i < n; i++)
+      ds[dep[i]]++;
+
+    Deque<long[]> q = dfs(0, 0, g);
+
+    long ans = 0;
+    int d = 0;
+    for (long[] u : q) {
+      ans += u[1] * p2[n - ds[d]] % mod;
+      ans %= mod;
+      d++;
+    }
+    System.out.println(ans);
   }
 
-  private static void dfs(int cur, int[][] dp, int dep) {
-    int m = g[cur].length;
-    long[] a = new long[m];
-    long[] b = new long[m];
+  static long[] tmp = new long[3];
 
-    long s = 1;
-    for (int i = 0; i < m; i++) {
-      dfs(g[cur][i], dp, dep + 1);
-      a[i] = dp[dep + 1][0];
-      b[i] = (p2[dp[dep + 1][1]] - a[i] + mod) % mod;
-
-      s = b[i] * s % mod;
+  private static Deque<long[]> dfs(int i, int d, int[][] g) {
+    if (g[i].length == 0) {
+      Deque<long[]> ret = new ArrayDeque<>();
+      ret.add(new long[] { 1, 1, 0 });
+      return ret;
     }
 
-    for (int i = 0; i < m; i++) {
+    List<Deque<long[]>> list = new ArrayList<>();
+    int max = 0;
+    Deque<long[]> ret = null;
 
+    for (int nex : g[i]) {
+      Deque<long[]> q = dfs(nex, d + 1, g);
+      list.add(q);
+      if (q.size() > max) {
+        ret = q;
+        max = q.size();
+      }
     }
+
+    int maxDep = 0;
+    for (Deque<long[]> q : list) {
+      if (q == ret)
+        continue;
+
+      Iterator<long[]> it = ret.iterator();
+      maxDep = Math.max(maxDep, q.size());
+      for (long[] v : q) {
+        long[] u = it.next();
+
+        tmp[0] = v[0] * u[0] % mod;
+        tmp[1] = (u[1] * v[0] % mod + u[0] * v[1] % mod) % mod;
+        tmp[2] = ((v[0] + v[1] + v[2]) % mod * u[2] % mod + v[1] * u[1] % mod + v[2] * u[0] % mod) % mod;
+
+        u[0] = tmp[0];
+        u[1] = tmp[1];
+        u[2] = tmp[2];
+      }
+    }
+    int ptr = 0;
+    for (long[] u : ret) {
+      if (ptr == maxDep)
+        break;
+      u[0] = (u[0] + u[2]) % mod;
+      u[2] = 0;
+      ptr++;
+    }
+
+    ret.addFirst(new long[] { 1, 1, 0 });
+    return ret;
+  }
+
+  public static int[][] parentToChildren(int[] par) {
+    int n = par.length;
+    int[] ct = new int[n];
+    for (int i = 0; i < n; i++) {
+      if (par[i] >= 0) {
+        ct[par[i]]++;
+      }
+    }
+    int[][] g = new int[n][];
+    for (int i = 0; i < n; i++) {
+      g[i] = new int[ct[i]];
+    }
+    for (int i = 0; i < n; i++) {
+      if (par[i] >= 0) {
+        g[par[i]][--ct[par[i]]] = i;
+      }
+    }
+
+    return g;
+  }
+
+  public static int[][] parents3(int[][] g, int root) {
+    int n = g.length;
+    int[] par = new int[n];
+    Arrays.fill(par, -1);
+
+    int[] depth = new int[n];
+    depth[0] = 0;
+
+    int[] q = new int[n];
+    q[0] = root;
+    for (int p = 0, r = 1; p < r; p++) {
+      int cur = q[p];
+      for (int nex : g[cur]) {
+        if (par[cur] != nex) {
+          q[r++] = nex;
+          par[nex] = cur;
+          depth[nex] = depth[cur] + 1;
+        }
+      }
+    }
+    return new int[][] { par, q, depth };
   }
 
   public static long invl(long a, long mod) {
@@ -95,7 +200,7 @@ public class Main {
         out.flush();
         tr((System.currentTimeMillis() - start) + "ms");
       }
-    }, "", 64000000).start();
+    }, "", 94000000).start();
   }
 
   private static java.io.InputStream is = System.in;
