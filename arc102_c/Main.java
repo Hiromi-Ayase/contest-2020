@@ -11,55 +11,28 @@ public class Main {
 
     long[] ret = new long[k * 2 + 1];
 
-    for (int a = 1; a <= k / 2; a++) {
-      int c = k - a * 2;
-      int i = a * 2 + 1;
+    for (int i = 2; i <= k + 1; i += 2) {
+      int m = i / 2;
+      // (1, 2m), (2, 2m-3), .., (m, m + 1)
 
-      for (int b = 0; b <= n; b++) {
-        int d = n - b;
-        ret[i] += f(a, b, c, d);
-        ret[i] %= mod;
+      long x = 0;
+      long two = 1;
+      for (int q = 0; q <= Math.min(n, m); q++) {
+        x += two * CX(m, q, mod, fif) % mod * CX(((k - m * 2) + q) + (n - q) - 1, n - q, mod, fif) % mod;
+        x %= mod;
+        two = two * 2 % mod;
       }
-      ret[i - 1] = ret[k * 2 - i] = ret[k * 2 - i - 1] = ret[i];
+      x %= mod;
+
+      ret[i] = x;
     }
 
-    if (k % 2 == 1) {
-      int a = k / 2;
-      int c = k - a * 2;
-      int i = a * 2 + 2;
-
-      for (int b = 0; b <= n; b++) {
-        int d = n - b;
-        ret[i] += f(a, b, c - 1, d);
-        ret[i] %= mod;
-      }
-      for (int b = 0; b <= n - 1; b++) {
-        int d = n - 1 - b;
-        ret[i] += f(a, b, c, d);
-        ret[i] %= mod;
-      }
+    for (int i = 2; i <= k + 1; i++) {
+      out.println(ret[i / 2 * 2]);
     }
-
-    for (int i = 2; i <= 2 * k; i++) {
-      out.println(ret[i]);
+    for (int i = k; i >= 2; i--) {
+      out.println(ret[i / 2 * 2]);
     }
-  }
-
-  // a ペアの数
-  // b ペアの数字の数
-  // c ペア以外の数
-  // d ペア以外の数字の数
-  public static long f(int a, int b, int c, int d) {
-    long ret = 1;
-    ret *= pow(2, a, mod);
-    ret %= mod;
-
-    ret *= CX(a + b - 1, b, mod, fif);
-    ret %= mod;
-
-    ret *= CX(c + d - 1, d, mod, fif);
-    ret %= mod;
-    return ret;
   }
 
   public static long pow(long a, long n, long mod) {
