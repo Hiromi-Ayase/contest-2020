@@ -25,10 +25,6 @@
       "path": "msol2020_E"
     },
     {
-      "name": "arc102_c",
-      "path": "arc102_c"
-    },
-    {
       "name": "agc028_c",
       "path": "agc028_c"
     },
@@ -88,6 +84,9 @@
     },
     {
       "path": "arc108_f"
+    },
+    {
+      "path": "cf686_f"
     }
   ],
   "settings": {
