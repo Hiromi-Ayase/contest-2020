@@ -49,10 +49,6 @@
       "path": "abl_F"
     },
     {
-      "name": "aclpra_K",
-      "path": "aclpra_K"
-    },
-    {
       "name": "arc104_E",
       "path": "arc104_E"
     },
@@ -87,6 +83,21 @@
     },
     {
       "path": "cf686_f"
+    },
+    {
+      "path": "yukicoder1308"
+    },
+    {
+      "path": "agc050_b"
+    },
+    {
+      "path": "cf693_f"
+    },
+    {
+      "path": "cf693_g"
+    },
+    {
+      "path": "abc182_f"
     }
   ],
   "settings": {
